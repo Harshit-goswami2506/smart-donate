@@ -1,1 +1,15 @@
+# Ignore node modules
+node_modules/
+**/node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment variables
 .env
+*.env
+
+# Build files
+dist/
+build/
