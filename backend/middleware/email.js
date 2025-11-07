@@ -1,18 +1,40 @@
-import { transporter } from "./email.config.js";
-import { Verification_Email_Template } from "./emailTemplate.js";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
-export const sendVerificationEmail = async (email, verificationCode) => {
+// ✅ Configure transporter
+export const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL, // Gmail address
+    pass: process.env.EMAIL_PASS, // App Password (NOT normal password)
+  },
+});
+
+// ✅ Send verification email
+const sendVerificationEmail = async (email, verificationCode) => {
   try {
-    const response = await transporter.sendMail({
-      from: '"Smart Donation" <noreply7456@gmail.com>',
+    // Debug log (to verify env variables load correctly)
+    console.log("📧 Sending email from:", process.env.EMAIL);
+
+    const info = await transporter.sendMail({
+      from: `"Smart Donation" <${process.env.EMAIL}>`,
       to: email,
-      subject: "Email Verification",
-      text: `Your verification code is: ${verificationCode}`,
-      html: Verification_Email_Template.replace("{verificationCode}", verificationCode),
+      subject: "Smart Donation - Verify your email",
+      html: `
+        <div style="font-family:sans-serif; line-height:1.5;">
+          <h2>Smart Donation Verification</h2>
+          <p>Your verification code is:</p>
+          <h1 style="color:#2b6cb0;">${verificationCode}</h1>
+          <p>If you didn’t request this, you can safely ignore this email.</p>
+        </div>
+      `,
     });
-    console.log("email send successfully");
+
+    console.log("✅ Email sent successfully:", info.response);
   } catch (error) {
-    console.error("Error sending in email.js email:", error);
+    console.error("❌ Error sending email:", error.message);
   }
 };
+
 export default sendVerificationEmail;
