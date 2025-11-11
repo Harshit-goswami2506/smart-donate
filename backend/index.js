@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors(
   {
-    origin: 'http://localhost:5173', // frontend URL
+    origin: 'https://smart-donate.onrender.com', // frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   }
